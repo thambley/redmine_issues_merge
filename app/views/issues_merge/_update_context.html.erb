@@ -1,0 +1,7 @@
+<% if !@issues.nil? and (@issues.size > 1) %>
+    <%# Display the merge issue action %>
+    <li>
+        <%= context_menu_link l(:button_merge), confirm_merge_issues_path(:ids => @issue_ids, :back_url => @back), :method => :post,
+            :class => 'icon-merge', :disabled => !User.current.allowed_to?(:merge_issues, @project) %>
+    </li>
+<% end %>
