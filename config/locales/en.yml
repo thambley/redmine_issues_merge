@@ -2,3 +2,4 @@
 en:
   label_merge_selected_issues: "Merge selected issues"
   button_merge: "Merge"
+  notice_confirm_merge: "These issues will be merged into one issue."

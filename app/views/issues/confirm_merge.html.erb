@@ -1,1 +1,20 @@
 <h2><%= l(:label_merge_selected_issues) %></h2>
+
+<div id="mergeExplanation">
+  <span>
+    <%= l(:notice_confirm_merge) %>
+  </span>
+</div>
+
+<ul id="merge-selection">
+<% @issues.each do |issue| %>
+  <%= content_tag 'li', link_to_issue(issue) %>
+<% end %>
+</ul>
+
+
+<%= form_tag(merge_issues_path, :id => 'confim_merge_form') do %>
+  <%= @issues.collect {|i| hidden_field_tag('ids[]', i.id)}.join("\n").html_safe %>
+
+  <%= submit_tag l(:button_submit) %>
+<% end %>
