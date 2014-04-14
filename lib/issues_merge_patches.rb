@@ -6,22 +6,35 @@ require 'issues_controller'
 module IssuesMerge
   module Patches
     module IssuePatch
-      def self.included(base) # :nodoc:
-        base.class_eval do
-          unloadable
-
-          def merge!(issues)
-            # make sure user has permission to update this issue and read + delete issues
-            # if issues is just one issue, make it the first element of an array
-            # for each issue
-            #   merge journal entries
-            #   merge attachments
-            #   merge relationships?
-            #   call hook "merge" to notify plugins to merge
-            #   delete merged issue
-          end
-
-        end
+      extend ActiveSupport::Concern
+      
+      included do # :nodoc:
+        unloadable
+        
+        after_create :issue_created_journal
+      end
+      
+      def merge!(issues)
+        # make sure user has permission to update this issue and read + delete issues
+        # if issues is just one issue, make it the first element of an array
+        # for each issue
+        #   merge journal entries
+        #   merge attachments
+        #   merge relationships?
+        #   merge time entries
+        #   merge watchers
+        #   call hook "merge" to notify plugins to merge
+        #   delete merged issue
+      end
+      
+      # create invisible journal entry to use when merging
+      def issue_created_journal
+        new_issue_journal = Journal.new(:journalized => self, :user => User.current)
+        dummy_detail = JournalDetail.new(:property => 'attr', :prop_key => :created_on, :value => self.created_on)
+        new_issue_journal.details << dummy_detail
+        new_issue_journal.notify = false
+        new_issue_journal.save
+        dummy_detail.delete
       end
     end
     
@@ -37,12 +50,12 @@ module IssuesMerge
       end
       
       def confirm_merge
-        flash[:notice] = ("TESTING")
-        redirect_to :back
-        #respond_to do |format|
-        #  format.html { }
+        @issues.sort!
+        
+        respond_to do |format|
+          format.html { }
         #  format.xml  { }
-        #end
+        end
       end
       
       def merge
