@@ -6,10 +6,12 @@ if Rails::VERSION::MAJOR >= 3
    ActionDispatch::Callbacks.to_prepare do
      # use require_dependency if you plan to utilize development mode
      require 'redmine_issues_merge/patches/issue_patch'
+     require 'redmine_issues_merge/patches/issues_controller_patch'
    end
 else
   Dispatcher.to_prepare do
     # use require_dependency if you plan to utilize development mode
-    rrequire 'redmine_issues_merge/patches/issue_patch'
+    require 'redmine_issues_merge/patches/issue_patch'
+    require 'redmine_issues_merge/patches/issues_controller_patch'
   end
 end

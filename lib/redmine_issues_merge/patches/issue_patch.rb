@@ -1,4 +1,5 @@
-require 'issue'
+# use require_dependency if you plan to utilize development mode
+require_dependency 'issue'
 
 module IssuesMerge
   module Patches

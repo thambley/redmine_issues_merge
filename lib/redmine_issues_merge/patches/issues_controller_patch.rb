@@ -1,5 +1,5 @@
 # use require_dependency if you plan to utilize development mode
-require 'issues_controller'
+require_dependency 'issues_controller'
 
 module IssuesMerge
   module Patches
