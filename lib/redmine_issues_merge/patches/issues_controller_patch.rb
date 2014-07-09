@@ -4,29 +4,38 @@ require_dependency 'issues_controller'
 module IssuesMerge
   module Patches
     module IssuesControllerPatch
-      extend ActiveSupport::Concern
+      def self.included(base)
+        base.extend(ClassMethods)
+
+        base.send(:include, InstanceMethods)
       
-      included do
-        unloadable
-        
-        prepend_before_filter :only => [:confirm_merge, :merge] do
-          find_issues
+        base.class_eval do
+          unloadable
+          
+          prepend_before_filter :only => [:confirm_merge, :merge] do
+            find_issues
+          end
         end
       end
       
-      def confirm_merge
-        @issues.sort!
+      module ClassMethods
+
+      end
+
+      module InstanceMethods
+        def confirm_merge
+          @issues.sort!
+          
+          respond_to do |format|
+            format.html { }
+          #  format.xml  { }
+          end
+        end
         
-        respond_to do |format|
-          format.html { }
-        #  format.xml  { }
+        def merge
+          
         end
       end
-      
-      def merge
-        
-      end
-      
     end
   end
 end
